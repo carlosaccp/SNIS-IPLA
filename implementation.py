@@ -56,7 +56,7 @@ class SNIS_IPLA:
     
     def iterate(self):
         D, N = np.shape(self.X)
-        U_fns = [self.U_fn(self.theta, self.X[:,k]) for k in range(N)] 
+        U_fns = [-self.U_fn(self.theta, self.X[:,k]) for k in range(N)] 
         U_fns_stable = U_fns - max(U_fns)
         SNIS_weights = np.exp(U_fns_stable)/sum(np.exp(U_fns_stable))
 
