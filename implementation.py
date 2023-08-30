@@ -21,7 +21,7 @@ class IPLA:
     
     def iterate(self):
         D, N = np.shape(self.X)
-        theta_next = self.theta - self.gamma * self.ave_grad_U_theta_fn(self.theta, self.X) + np.sqrt(2*self.gamma) * np.random.normal(size=1)
+        theta_next = self.theta - self.gamma * self.ave_grad_U_theta_fn(self.theta, self.X) + np.sqrt(2*self.gamma/N) * np.random.normal(size=1)
         X_next = self.X - self.gamma * self.grad_U_X_fn(self.theta, self.X) + np.sqrt(2*self.gamma) * np.random.normal(size=(D, N))
         self.thetas.append(theta_next)
         self.Xs.append(X_next)
@@ -60,7 +60,7 @@ class SNIS_IPLA:
         U_fns_stable = U_fns - max(U_fns)
         SNIS_weights = np.exp(U_fns_stable)/sum(np.exp(U_fns_stable))
 
-        theta_next = self.theta - self.gamma*np.sum([SNIS_weights[i] * self.grad_U_theta_fn(self.theta, self.X[:,i]) for i in range(N)]) + np.sqrt(2*self.gamma) * np.random.normal(size=1)
+        theta_next = self.theta - self.gamma*np.sum([SNIS_weights[i] * self.grad_U_theta_fn(self.theta, self.X[:,i]) for i in range(N)]) + np.sqrt(2*self.gamma/N) * np.random.normal(size=1)
         X_next = self.X - self.gamma * self.grad_U_X_fn(self.theta, self.X) + np.sqrt(2*self.gamma) * np.random.normal(size=(D, N))
         self.thetas.append(theta_next)
         self.Xs.append(X_next)
