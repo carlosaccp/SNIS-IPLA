@@ -72,6 +72,7 @@ class SNIS_IPLA:
         self.grad_U_theta, self.grad_U_X = grads_U
         self.kwargs = kwargs
         self.U = U
+        self.test=test
 
     def grad_U_X_fn(self, theta, x):
         return self.grad_U_X(theta, x, **self.kwargs)
@@ -84,10 +85,11 @@ class SNIS_IPLA:
     
     def iterate(self):
         D, N = np.shape(self.X)
-        U_fns = [-self.U_fn(self.theta, self.X[:,k]) for k in range(N)] 
-        U_fns_stable = U_fns - max(U_fns)
-        SNIS_weights = np.exp(U_fns_stable)/sum(np.exp(U_fns_stable))
-        if self.test:
+        if not self.test:
+            U_fns = [-self.U_fn(self.theta, self.X[:,k]) for k in range(N)] 
+            U_fns_stable = U_fns - max(U_fns)
+            SNIS_weights = np.exp(U_fns_stable)/sum(np.exp(U_fns_stable))
+        else:
             SNIS_weights = [1/N] * N
         theta_next = self.theta - self.gamma*np.sum([SNIS_weights[i] * self.grad_U_theta_fn(self.theta, self.X[:,i]) for i in range(N)]) + np.sqrt(2*self.gamma/N) * np.random.normal(size=1)
         X_next = self.X - self.gamma * self.grad_U_X_fn(self.theta, self.X) + np.sqrt(2*self.gamma) * np.random.normal(size=(D, N))
