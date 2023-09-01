@@ -98,3 +98,42 @@ class SNIS_IPLA:
         self.theta = theta_next
         self.X = X_next
         return None
+    
+class fast_SNIS_IPLA:
+    def __init__(self, theta0, X0, p, grad_p, grad_U_X, gamma=0.01, test=False, **kwargs):
+        # theta0: initial parameter 
+        # X0: initial data. This is a vector of size N
+        self.theta = theta0
+        self.X = X0
+        self.N = np.shape(X0)[1]
+        self.thetas = [self.theta]
+        self.Xs = [self.X]
+        self.gamma = gamma
+        self.grad_U_X = grad_U_X
+        self.kwargs = kwargs
+        self.p = p
+        self.grad_theta_p = grad_p
+        self.test=test
+
+    def p_fn(self, theta, x):
+        return self.p(theta, x, **self.kwargs)
+    
+    def grad_theta_p_fn(self, theta, x):
+        return self.grad_theta_p(theta, x, **self.kwargs)
+
+    def grad_U_X_fn(self, theta, x):
+        return self.grad_U_X(theta, x, **self.kwargs)
+    
+    def grad_p_fn(self, theta, x):
+        return self.grad_theta_p(theta, x, **self.kwargs)
+    
+    def iterate(self):
+        D, N = np.shape(self.X)
+        update_term = np.sum([self.grad_theta_p_fn(self.theta, self.X[:,k]) for k in range(N)])/np.sum([self.p_fn(self.theta, self.X[:,k]) for k in range(N)])
+        theta_next = self.theta + self.gamma * update_term + np.sqrt(2*self.gamma/N) * np.random.normal(size=1)
+        X_next = self.X - self.gamma * self.grad_U_X_fn(self.theta, self.X) + np.sqrt(2*self.gamma) * np.random.normal(size=(D, N))
+        self.thetas.append(theta_next)
+        self.Xs.append(X_next)
+        self.theta = theta_next
+        self.X = X_next
+        return None
