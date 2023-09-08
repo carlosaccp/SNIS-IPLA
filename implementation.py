@@ -20,7 +20,7 @@ def min_jitter_chol(A, jitter = 1e-20):
         while jitter < 1:
             try:
                 cholesky = np.linalg.cholesky(A + jitter*np.eye(np.shape(A)[0]))
-                print("Matrix not pd")
+                #print("Matrix not pd")
                 return jitter, cholesky
             except Exception:
                 jitter *= 10
@@ -177,11 +177,11 @@ class SVGD_EM:
         if self.noise:
             mass_m = self.mass_matrix(self.X)
             jitter, root_mass_matrix = min_jitter_chol(mass_m)
-            print("Jitter:", jitter) if jitter > 0 else None
+            #print("Jitter:", jitter) if jitter > 0 else None
             if jitter > 0:
                 self.j_iter.append(self.iter)
             root_mass_matrix = np.sqrt(2) * root_mass_matrix
-            print("Root Mass Matrix:", root_mass_matrix)  # Add this line for debugging
+            #print("Root Mass Matrix:", root_mass_matrix)  # Add this line for debugging
         for i in range(N):
             col = np.zeros((D, 1))
             for j in range(N):
