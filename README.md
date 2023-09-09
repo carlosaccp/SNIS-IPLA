@@ -1,0 +1,3 @@
+# Testing noisy particle optimisers
+
+We are testing two different stochastic particle optimisers, SNIS-IPLA and SVGD-EM. The tests are all implemented in `test.ipynb`. We test these optimisers on a Hierarchical Toy Model and a Bayesian Logistic Regression Model. The experiments were inspired by [Kuntz et al.](https://github.com/juankuntz/ParEM). Joint work with [Dr Deniz Akyildiz](https://akyildiz.me/),
